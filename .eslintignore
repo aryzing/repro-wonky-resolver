@@ -1,0 +1,9 @@
+node_modules
+dist
+**/*.html
+**/*.json
+**/*.md
+**/*.yml
+yarn.lock
+yarn-error.log
+Dockerfile
