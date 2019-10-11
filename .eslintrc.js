@@ -20,28 +20,7 @@ module.exports = {
 
     // We're using TypeScript
     'react/prop-types': 0,
-
-    // GraphQL rules
-    'graphql/template-strings': ['error', {
-      env: 'apollo',
-      schemaJson: require('./schema.json'),
-    }],
-    'graphql/named-operations': ['error', {
-      schemaJson: require('./schema.json'),
-    }],
-    'graphql/capitalized-type-name': ['error', {
-      schemaJson: require('./schema.json'),
-    }],
-    'graphql/no-deprecated-fields': [
-      'error',
-      {
-        schemaJson: require('./schema.json'),
-      },
-    ],
   },
-  plugins: [
-    'graphql'
-  ],
   settings: {
     react: {
       version: 'detect'     , // Tells eslint-plugin-react to automatically detect the version of React to use

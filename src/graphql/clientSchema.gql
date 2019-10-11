@@ -1,3 +1,0 @@
-extend type Query {
-  wonkyResolver(uselessId: ID!): [ID!]!
-}

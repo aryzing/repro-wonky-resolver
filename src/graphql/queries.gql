@@ -1,3 +1,0 @@
-query Wonky($id: ID!) {
-  wonkyResolver(uselessId: $id) @client(always: true)
-}
