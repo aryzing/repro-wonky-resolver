@@ -13,18 +13,6 @@ const WONKY_QUERY = gql`
   }
 `;
 
-export const INPUT_VALUE_QUERY = gql`
-  query InputValue {
-    inputValue @client
-  }
-`;
-
-const INPUT_MUTATION = gql`
-  mutation Input($value: String!) {
-    setInputValue(value: $value) @client
-  }
-`;
-
 export const InnerApp: FunctionComponent<InnerAppProps> = ({
   number,
   setNumber,
@@ -41,43 +29,41 @@ export const InnerApp: FunctionComponent<InnerAppProps> = ({
     },
     // fetchPolicy: 'no-cache',
   });
-  const {
-    loading: inputQueryLoading,
-    error: inputQueryError,
-    data: inputQueryData,
-  } = useQuery(INPUT_VALUE_QUERY, {
-    fetchPolicy: 'no-cache',
-  });
-  const [
-    setInputValue,
-    { loading: inputLoading, error: inputError },
-  ] = useMutation(INPUT_MUTATION);
 
-  if (wonkyLoading || inputLoading || inputQueryLoading) {
+  if (wonkyLoading) {
     return <div>Loading...</div>;
   }
 
-  if (wonkyError || inputError || inputQueryError) {
+  if (wonkyError) {
     return (
       <div>
         <pre>{JSON.stringify(wonkyError)}</pre>
-        <pre>{JSON.stringify(inputError)}</pre>
-        <pre>{JSON.stringify(inputQueryError)}</pre>
       </div>
     );
   }
 
-  if (wonkyData && inputQueryData) {
+  if (wonkyData) {
     return (
       <div>
-        <div>
-          <input
-            value={inputQueryData.inputValue}
-            onChange={(e): void => {
-              setInputValue({ variables: { value: e.target.value } });
-            }}
-          />
-        </div>
+        <h2>Click the button to re-render this component</h2>
+        <p>
+          Every time the button is clicked, the state is changed (
+          <code>useState</code>) and the component re-renders.
+        </p>
+        <p>
+          On each render, the <code>wonkyResolver</code> runs b/c the query we
+          have in place has an <code>@client(always: true)</code> directive.
+        </p>
+        <p>
+          When the <code>wonkyResolver</code> is declard as <code>async</code>,
+          the array below gets messd up.
+        </p>
+        <p>
+          The purpose of <code>wonkyResolver</code> is to remove the second last
+          item from the array. The logic in this component cycles around this
+          behavior four times before a query with previously seen variables is
+          run (<code>{'nextNumber = number < 3 ? number + 1 : 0'}</code>).
+        </p>
         <div>
           <pre>{JSON.stringify(wonkyData.wonkyResolver)}</pre>
         </div>
@@ -88,7 +74,7 @@ export const InnerApp: FunctionComponent<InnerAppProps> = ({
               setNumber(nextNumber);
             }}
           >
-            Random!
+            Click me!
           </button>
           <span>{number}</span>
         </div>

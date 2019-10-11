@@ -1,6 +1,5 @@
 // Core
 import ApolloClient, { InMemoryCache } from 'apollo-boost';
-import { INPUT_VALUE_QUERY } from '../containers/App';
 
 const cache = new InMemoryCache();
 
@@ -48,31 +47,6 @@ const resolvers = {
 
       window.nextResolverValues = tempArray;
       return tempArray;
-    },
-    inputValue(_parent: any, _args: any, { cache }: any): string {
-      console.log('Inside inputValue');
-
-      const res = cache.readQuery({
-        query: INPUT_VALUE_QUERY,
-      });
-
-      if (res) {
-        return res.inputValue;
-      }
-
-      return '';
-    },
-  },
-  Mutation: {
-    setInputValue(_parent: any, { value }: any, { client }: any): string {
-      console.log('Inside setInputValue');
-      client.writeQuery({
-        query: INPUT_VALUE_QUERY,
-        data: {
-          inputValue: value,
-        },
-      });
-      return value;
     },
   },
 };
