@@ -4,7 +4,6 @@
 
 ```
 yarn
-yarn run-graphql-codegen
 yarn dev
 ```
 

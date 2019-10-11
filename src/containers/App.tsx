@@ -9,13 +9,13 @@ interface InnerAppProps {
 
 const WONKY_QUERY = gql`
   query Wonky($uselessId: ID!) {
-    wonkyResolver(uselessId: $uselessId) @client
+    wonkyResolver(uselessId: $uselessId) @client(always: true)
   }
 `;
 
-export const GET_INPUT_VALUE_QUERY = gql`
-  query GetInputValue {
-    getInputValue @client
+export const INPUT_VALUE_QUERY = gql`
+  query InputValue {
+    inputValue @client
   }
 `;
 
@@ -45,12 +45,12 @@ export const InnerApp: FunctionComponent<InnerAppProps> = ({
     loading: inputQueryLoading,
     error: inputQueryError,
     data: inputQueryData,
-  } = useQuery(GET_INPUT_VALUE_QUERY, {
+  } = useQuery(INPUT_VALUE_QUERY, {
     fetchPolicy: 'no-cache',
   });
   const [
     setInputValue,
-    { loading: inputLoading, error: inputError, data: inputData },
+    { loading: inputLoading, error: inputError },
   ] = useMutation(INPUT_MUTATION);
 
   if (wonkyLoading || inputLoading || inputQueryLoading) {
@@ -72,7 +72,7 @@ export const InnerApp: FunctionComponent<InnerAppProps> = ({
       <div>
         <div>
           <input
-            value={inputQueryData.getInputValue}
+            value={inputQueryData.inputValue}
             onChange={(e): void => {
               setInputValue({ variables: { value: e.target.value } });
             }}
