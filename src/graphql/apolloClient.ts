@@ -13,25 +13,20 @@ cache.writeData({
 
 const pop2ndLastItem = (arr: string[]): string[] => {
   if (arr.length > 2) {
-    const arrCopy = [...arr];
-    // delete second last item
-    arrCopy.splice(arr.length - 2, 1);
-    return arrCopy;
+    arr.splice(arr.length - 2, 1);
+    return arr;
   }
 
-  // if `arr` to short, just return `arr`
+  // if `arr` too short, just return `arr`
   return arr;
 };
 
 const resolvers = {
   Query: {
     // NOTE: ################ This is where the magic happens ################
-    // If this resolver is sync, all works fine and as expected (try removing
-    // the async keyowrd and you'll get expected behaviour).
-    // When this resolver is **`async`**, weird things start to happen. The
-    // returned array is incorrectly written to the cache. Seems some sort of
-    // merging behaviour is going on.
-    async wonkyResolver(_parent: any, { uselessId }: any): Promise<string[]> {
+    // The returned array is incorrectly written to the cache. Seems some sort
+    // of merging behaviour is going on.
+    wonkyResolver(_parent: any, { uselessId }: any): string[] {
       // including `uselessId` b/c, despite being useless, the resolver that's
       // displaying the buggy behavior in my code has one too -- just being
       // thorough.
@@ -42,10 +37,11 @@ const resolvers = {
         return window.nextResolverValues;
       }
 
-      let tempArray = window.nextResolverValues;
+      let tempArray = [...window.nextResolverValues];
       tempArray = pop2ndLastItem(tempArray);
 
       window.nextResolverValues = tempArray;
+      console.log('Resolver return value:', tempArray);
       return tempArray;
     },
   },

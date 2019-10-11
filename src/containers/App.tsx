@@ -1,10 +1,10 @@
 import React, { useState, FunctionComponent } from 'react';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
 interface InnerAppProps {
-  number: number;
-  setNumber(n: number): void;
+  mockIdNumber: number;
+  setNextMockIdNumber(n: number): void;
 }
 
 const WONKY_QUERY = gql`
@@ -14,17 +14,16 @@ const WONKY_QUERY = gql`
 `;
 
 export const InnerApp: FunctionComponent<InnerAppProps> = ({
-  number,
-  setNumber,
+  mockIdNumber,
+  setNextMockIdNumber,
 }) => {
-  console.log('InnerApp');
   const {
     loading: wonkyLoading,
     error: wonkyError,
     data: wonkyData,
   } = useQuery(WONKY_QUERY, {
     variables: {
-      uselessId: `mock-id-${number}`,
+      uselessId: `mock-id-${mockIdNumber}`,
       // uselessId: `mock-id-static`,
     },
     // fetchPolicy: 'no-cache',
@@ -62,7 +61,11 @@ export const InnerApp: FunctionComponent<InnerAppProps> = ({
           The purpose of <code>wonkyResolver</code> is to remove the second last
           item from the array. The logic in this component cycles around this
           behavior four times before a query with previously seen variables is
-          run (<code>{'nextNumber = number < 3 ? number + 1 : 0'}</code>).
+          run (<code>{'nextMockIdNumber = number < 3 ? number + 1 : 0'}</code>).
+        </p>
+        <p style={{ fontWeight: 'bold' }}>
+          Open the terminal to see difference b/w array returned by resolver,
+          and actual value shown below after 4+ clicks.
         </p>
         <div>
           <pre>{JSON.stringify(wonkyData.wonkyResolver)}</pre>
@@ -70,13 +73,13 @@ export const InnerApp: FunctionComponent<InnerAppProps> = ({
         <div>
           <button
             onClick={(): void => {
-              const nextNumber = number < 3 ? number + 1 : 0;
-              setNumber(nextNumber);
+              const nextMockIdNumber = mockIdNumber < 3 ? mockIdNumber + 1 : 0;
+              setNextMockIdNumber(nextMockIdNumber);
             }}
           >
             Click me!
           </button>
-          <span>{number}</span>
+          <span>{mockIdNumber}</span>
         </div>
       </div>
     );
@@ -86,7 +89,11 @@ export const InnerApp: FunctionComponent<InnerAppProps> = ({
 };
 
 export const App: FunctionComponent = () => {
-  const [number, setNumber] = useState(0);
-  console.log('App');
-  return <InnerApp number={number} setNumber={setNumber} />;
+  const [mockIdNumber, setNextMockIdNumber] = useState(0);
+  return (
+    <InnerApp
+      mockIdNumber={mockIdNumber}
+      setNextMockIdNumber={setNextMockIdNumber}
+    />
+  );
 };
